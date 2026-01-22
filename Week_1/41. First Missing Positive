@@ -1,0 +1,22 @@
+41. First Missing Positive
+
+https://leetcode.com/problems/first-missing-positive/submissions/1884704704/
+
+-----
+CODE
+-----
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int max=Integer.MIN_VALUE;
+        Set<Integer> set = new HashSet<>();
+        for(int ele : nums){
+            if(ele >=0 ){
+                if(max<ele) max=ele;
+                set.add(ele);
+            }
+        }
+        if(max==Integer.MIN_VALUE) return 1;
+        for(int i=1;i<=max;i++) if(!set.contains(i)) return i;
+        return max+1;
+    }
+}

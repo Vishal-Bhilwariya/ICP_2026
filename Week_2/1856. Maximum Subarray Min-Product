@@ -1,0 +1,52 @@
+1856. Maximum Subarray Min-Product
+
+https://leetcode.com/problems/maximum-subarray-min-product/submissions/1890784395/
+
+class Solution {
+    public int maxSumMinProduct(int[] nums) {
+        int n = nums.length;
+        
+        
+        long[] prefixSum = new long[n];
+        prefixSum[0]=nums[0];
+        for(int i=1;i<n;i++) prefixSum[i] = prefixSum[i-1]+nums[i];
+
+        Stack<Integer> st = new Stack<>();
+        int[] leftSmallIdx = new int[n];
+        for(int i=0;i<n;i++){
+            while(!st.isEmpty() && nums[i] <= nums[st.peek()]){
+                st.pop();
+            }
+            if(!st.isEmpty()){
+                leftSmallIdx[i]=st.peek();
+            }else{
+                leftSmallIdx[i]=-1;
+            }
+            st.push(i);
+        }
+        st.clear();
+        int[] rightSmallIdx = new int[n];
+        for(int i=n-1;i>=0;i--){
+            while(!st.isEmpty() && nums[i] <= nums[st.peek()]){
+                st.pop();
+            }
+            if(!st.isEmpty()){
+                rightSmallIdx[i]=st.peek();
+            }else{
+                rightSmallIdx[i]=n;
+            }
+            st.push(i);
+        }
+
+        long result = 0;
+        for(int i=0;i<n;i++){
+            int leftIdx = leftSmallIdx[i];
+            int rightIdx = rightSmallIdx[i];
+            long a = prefixSum[rightIdx-1];
+            if(leftIdx != -1) a -= prefixSum[leftIdx];
+            long temp = nums[i] * a;
+            result=Math.max(result,temp);
+        }
+        return (int) (result % 1000000007);
+    }
+}
